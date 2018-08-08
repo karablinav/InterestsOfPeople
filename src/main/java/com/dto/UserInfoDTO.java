@@ -8,10 +8,9 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UsersInfoDTO {
+public class UserInfoDTO {
 
     private Long id;
-
 
     private User user;
 
@@ -20,14 +19,14 @@ public class UsersInfoDTO {
 
     private Set<Sector> sectors = new HashSet<>();
 
-    public UsersInfoDTO(Long id, User user, boolean checkBox, Set<Sector> sectors) {
+    public UserInfoDTO(Long id, User user, boolean checkBox, Set<Sector> sectors) {
         this.id = id;
         this.user = user;
         this.checkbox = checkBox;
         this.sectors = sectors;
     }
 
-    public UsersInfoDTO() {
+    public UserInfoDTO() {
     }
 
     public Long getId() {

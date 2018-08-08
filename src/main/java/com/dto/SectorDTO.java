@@ -2,7 +2,7 @@ package com.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class SectorDTO {
+public class SectorDTO{
 
     private Long id;
 

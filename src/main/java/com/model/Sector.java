@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Table(name = "sector")
 @Entity
@@ -15,16 +13,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 @Builder
-@SequenceGenerator(
-        name="SEQ_STORE_SECTOR",
-        sequenceName="sector_id_seq",
-        initialValue = 600,
-        allocationSize = 1
-)
 public class Sector {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_STORE_SECTOR")
+    @SequenceGenerator(
+            name="SEQ_STORE_SECTOR",
+            sequenceName="sector_id_seq",
+            initialValue = 600,
+            allocationSize = 1
+    )
     private Long id;
 
     private String name;

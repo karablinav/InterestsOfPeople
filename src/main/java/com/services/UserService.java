@@ -2,61 +2,19 @@ package com.services;
 
 import com.dto.UserDTO;
 import com.model.User;
-import com.repositories.UserRepository;
 import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    private final static String NOT_FOUND_ID = "User with id = %d not found";
+    List<User> getAllUsers() throws NotFoundException;
 
-    private UserRepository userRepository;
+    User findById(Long id) throws NotFoundException;
 
-    @Autowired
-    public void setUsersInfoRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    User save(UserDTO newUser);
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    User update(Long id, UserDTO updateUser) throws NotFoundException;
 
-    public User findById(Long id) throws NotFoundException {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new NotFoundException(String.format(NOT_FOUND_ID, id));
-        }
-    }
-
-    public User save(UserDTO newUser) {
-        User user = User.builder().name(newUser.getName()).build();
-        return userRepository.save(user);
-    }
-
-    public User update(Long id, UserDTO updatedUser) throws NotFoundException {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            user.get().setName(updatedUser.getName());
-            return userRepository.save(user.get());
-        } else {
-            throw new NotFoundException(String.format(NOT_FOUND_ID, id));
-        }
-    }
-
-    public void delete(Long id) throws NotFoundException {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        } else
-            throw new NotFoundException(String.format(NOT_FOUND_ID, id));
-    }
-
-
+    void delete(Long id) throws NotFoundException;
 }

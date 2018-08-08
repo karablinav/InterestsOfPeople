@@ -1,6 +1,6 @@
 package com.controllers.rest;
 
-import com.dto.UsersInfoDTO;
+import com.dto.UserInfoDTO;
 import com.model.UsersInfo;
 import com.services.UserInfoService;
 import javassist.NotFoundException;
@@ -15,10 +15,10 @@ import java.util.List;
 @RestController
 public class UserInfoController {
 
-    private UserInfoService userInfoService;
+    private final UserInfoService userInfoService;
 
     @Autowired
-    public void setUserInfoService(UserInfoService userInfoService) {
+    public UserInfoController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
     }
 
@@ -38,13 +38,13 @@ public class UserInfoController {
     }
 
     @PostMapping("/usersinfo")
-    public ResponseEntity<UsersInfo> saveSector(@Valid @RequestBody UsersInfoDTO newUsers) throws NotFoundException {
+    public ResponseEntity<UsersInfo> saveSector(@Valid @RequestBody UserInfoDTO newUsers) throws NotFoundException {
         UsersInfo usersInfo = userInfoService.save(newUsers);
         return ResponseEntity.status(HttpStatus.CREATED).body(usersInfo);
     }
 
     @PutMapping("/usersinfo/{id}")
-    public ResponseEntity<UsersInfo> updateSector(@PathVariable(value = "id") Long id, @Valid @RequestBody UsersInfoDTO updatedUsers)
+    public ResponseEntity<UsersInfo> updateSector(@PathVariable(value = "id") Long id, @Valid @RequestBody UserInfoDTO updatedUsers)
             throws NotFoundException {
         UsersInfo usersInfo = userInfoService.save(updatedUsers);
         return ResponseEntity.status(HttpStatus.OK).body(usersInfo);
