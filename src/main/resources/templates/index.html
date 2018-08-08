@@ -1,0 +1,145 @@
+<html>
+<head>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="webjars/jquery-validation/1.17.0/jquery.validate.js"></script>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: "/sectors",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (response) {
+
+                    for (var i in response) {
+                        $("<option data-parent=" + response[i].parentId + ">").val(response[i].id).text(response[i].name).appendTo('#sectors');
+                        response[i].value
+                    }
+                    if(sessionStorage.getItem("userId")){
+                        $.ajax({
+                            url: "/usersinfo/" + sessionStorage.getItem("userId"),
+                            type: "GET",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            success: function (response) {
+                                $("#name").val(response.user.name);
+                                var sectorsId = response.sectors.map(item => item.id);
+                                console.log(response);
+                                console.log(sectorsId);
+
+                                $("#sectors option").each(function() {
+                                    if(sectorsId.indexOf(parseInt(this.value, 10)) > -1 ){
+                                        $(this).prop("selected", true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            $("#involveSectors").validate({
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    sectors: {
+                        required: true
+                    },
+                    agree: {
+                        required: true
+                    }
+                },
+                submitHandler: function(form) {
+                    var name = $("#name").val();
+                    var sectorsArray = [];
+                    $("#sectors option:selected").each(function () {
+                        var sectors = {};
+                        sectors["id"] = this.value;
+                        sectors["name"] = this.text;
+                        sectors["parentId"] = $(this).data()["parent"];
+                        sectorsArray.push(sectors);
+                    });
+                    var obj = {};
+                    var userObj = {};
+                    var userId = sessionStorage.getItem("userId");
+                    userObj["name"] = name.trim();
+                    userObj["id"] = userId ? userId : 0;
+                    obj["checkbox"] = $("#agree").is(":checked");
+                    obj["sectors"] = sectorsArray;
+                    obj["user"] = userObj;
+
+                    $.ajax({
+                        url: "/usersinfo",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(obj),
+                        success: function (userInfo) {
+                            sessionStorage.setItem("userId", userInfo.user.id);
+                            console.log(userInfo.user.id);
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        });
+
+
+        function treeify(list, idAttr, parentAttr, childrenAttr) {
+            if (!idAttr) idAttr = 'id';
+            if (!parentAttr) parentAttr = 'parent';
+            if (!childrenAttr) childrenAttr = 'children';
+
+            var treeList = [];
+            var lookup = {};
+            list.forEach(function(obj) {
+                lookup[obj[idAttr]] = obj;
+                obj[childrenAttr] = [];
+            });
+            list.forExach(function(obj) {
+                if (obj[parentAttr] != null) {
+                    lookup[obj[parentAttr]][childrenAttr].push(obj);
+                } else {
+                    treeList.push(obj);
+                }
+            });
+            return treeList;
+        };
+    </script>
+</head>
+<body>
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-md-6 col-md-offset-4">
+            <form id="involveSectors">
+                <p2 class="font-weight-normal">Please enter your name and pick the Sectors you are currently involved in.</p2>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="name">Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="sectors">Sectors:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="sectors" name="sectors" multiple size="20"></select>
+                    </div>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-inline col-sm-4" for="agree">Agree to terms:</label>
+                    <input type="checkbox" class="form-check-input" name="agree" id="agree">
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+</html>

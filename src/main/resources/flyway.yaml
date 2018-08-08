@@ -1,0 +1,11 @@
+flyway:
+  enabled: true
+  encoding: UTF-8
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/postgres
+  username: postgres
+  password: postgres
+  schemas: public
+  outOfOrder: true
+  validateOnMigrate: true
+  cleanDisabled: false
