@@ -2,7 +2,7 @@ package com.controllers.rest;
 
 import com.dto.SectorDTO;
 import com.model.Sector;
-import com.services.impl.SectorServiceImpl;
+import com.services.SectorService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,16 +15,16 @@ import java.util.List;
 @RestController
 public class SectorController {
 
-    private final SectorServiceImpl sectorServiceImpl;
+    private final SectorService sectorService;
 
     @Autowired
-    public SectorController(SectorServiceImpl sectorServiceImpl) {
-        this.sectorServiceImpl = sectorServiceImpl;
+    public SectorController(SectorService sectorService) {
+        this.sectorService = sectorService;
     }
 
     @GetMapping("/sectors")
     public ResponseEntity<List<Sector>> getAllSectors() {
-        List<Sector> sectors = sectorServiceImpl.getAllSectors();
+        List<Sector> sectors = sectorService.getAllSectors();
         if (!sectors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(sectors);
         } else {
@@ -34,25 +34,25 @@ public class SectorController {
 
     @GetMapping("/sectors/{id}")
     public ResponseEntity<Sector> getSectorById(@PathVariable(value = "id") Long id) throws NotFoundException {
-        return ResponseEntity.ok(sectorServiceImpl.findById(id));
+        return ResponseEntity.ok(sectorService.findById(id));
     }
 
     @PostMapping("/sectors")
     public ResponseEntity<Sector> saveSector( @Valid @RequestBody SectorDTO newSector) {
-        Sector sector = sectorServiceImpl.save(newSector);
+        Sector sector = sectorService.save(newSector);
         return ResponseEntity.status(HttpStatus.CREATED).body(sector);
     }
 
     @PutMapping("/sectors/{id}")
     public ResponseEntity<Sector> updateSector(@PathVariable(value = "id") Long id, @Valid @RequestBody SectorDTO updatedSector)
             throws NotFoundException {
-        Sector sector = sectorServiceImpl.update(id, updatedSector);
+        Sector sector = sectorService.update(id, updatedSector);
         return ResponseEntity.status(HttpStatus.OK).body(sector);
     }
 
     @DeleteMapping("/sectors/{id}")
     public ResponseEntity<Sector> deleteSector(@PathVariable(value = "id") Long id) throws NotFoundException {
-        sectorServiceImpl.delete(id);
+        sectorService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

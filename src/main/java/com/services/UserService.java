@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDTO> getAllUsers() throws NotFoundException;
+    List<UserDTO> getAllUsers();
 
     UserDTO findById(Long id) throws NotFoundException;
 
