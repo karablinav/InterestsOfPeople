@@ -44,17 +44,17 @@ public class UserInfoServiceImpl implements UserInfoService{
         if (usersInfo.isPresent()) {
             userRepository.save(newUserInfo.getUser());
             UsersInfo infoUser = usersInfo.get();
-            infoUser.setCheckbox(newUserInfo.isCheckBox());
+            infoUser.setCheckbox(newUserInfo.isCheckbox());
             infoUser.setUser(newUserInfo.getUser());
             infoUser.setSectors(newUserInfo.getSectors());
-            infoUser.setCheckbox(newUserInfo.isCheckBox());
+            infoUser.setCheckbox(newUserInfo.isCheckbox());
             return userInfoRepository.save(usersInfo.get());
         } else {
             User newUser = User.builder().name(newUserInfo.getUser().getName()).build();
             UsersInfo info = UsersInfo.builder()
                     .sectors(newUserInfo.getSectors())
                     .user(newUser)
-                    .checkbox(newUserInfo.isCheckBox()).build();
+                    .checkbox(newUserInfo.isCheckbox()).build();
             newUser.setUserInfo(info);
             userRepository.save(newUser);
             return userInfoRepository.save(info);

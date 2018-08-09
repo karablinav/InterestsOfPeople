@@ -1,8 +1,6 @@
 package com.controllers.rest;
 
 import com.dto.UserDTO;
-import com.model.User;
-import com.model.UsersInfo;
 import com.services.impl.UserServiceImpl;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,35 +22,34 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userServiceImpl.getAllUsers();
-        if (!users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(users);
-        } else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
-        }
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userServiceImpl.getAllUsers();
+        return !users.isEmpty()
+                ? ResponseEntity.status(HttpStatus.OK).body(users)
+                : ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getSectorById(@PathVariable(value = "id") Long id) throws NotFoundException {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long id) throws NotFoundException {
         return ResponseEntity.ok(userServiceImpl.findById(id));
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> saveSector(@Valid @RequestBody UserDTO newUsers) {
-        User user = userServiceImpl.save(newUsers);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity saveUser(@Valid @RequestBody UserDTO newUsers) {
+        userServiceImpl.save(newUsers);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateSector(@PathVariable(value = "id") Long id, @Valid @RequestBody UserDTO updatedUsers)
+    public ResponseEntity updateUser(@PathVariable(value = "id") Long id,
+                                             @Valid @RequestBody UserDTO updatedUsers)
             throws NotFoundException {
-        User user = userServiceImpl.update(id, updatedUsers);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        userServiceImpl.update(id, updatedUsers);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<UsersInfo> deleteSector(@PathVariable(value = "id") Long id) throws NotFoundException {
+    public ResponseEntity<UserDTO> deleteUser(@PathVariable(value = "id") Long id) throws NotFoundException {
         userServiceImpl.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

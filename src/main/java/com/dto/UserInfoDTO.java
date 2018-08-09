@@ -1,13 +1,20 @@
 package com.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Sector;
 import com.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserInfoDTO {
 
     private Long id;
@@ -18,47 +25,4 @@ public class UserInfoDTO {
     private boolean checkbox;
 
     private Set<Sector> sectors = new HashSet<>();
-
-    public UserInfoDTO(Long id, User user, boolean checkBox, Set<Sector> sectors) {
-        this.id = id;
-        this.user = user;
-        this.checkbox = checkBox;
-        this.sectors = sectors;
-    }
-
-    public UserInfoDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isCheckBox() {
-        return checkbox;
-    }
-
-    @JsonProperty(value = "checkbox")
-    public void setCheckBox(boolean checkbox) {
-        this.checkbox = checkbox;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Set<Sector> getSectors() {
-        return sectors;
-    }
-
-    public void setSectors(Set<Sector> sectors) {
-        this.sectors = sectors;
-    }
 }
