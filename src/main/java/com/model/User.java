@@ -28,5 +28,5 @@ public class User {
 
     @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
     @JsonBackReference
-    private UsersInfo userInfo;
+    private UserInfo userInfo;
 }

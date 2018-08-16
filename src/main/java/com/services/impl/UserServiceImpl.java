@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO findById(Long id) throws NotFoundException {
-        return userRepository.findById(id).map(this::convertUserToDto)
+        return userRepository.findById(id)
+                .map(this::convertUserToDto)
                 .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_ID, id)));
     }
 
@@ -63,16 +64,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDTO convertUserToDto(User user){
-        return UserDTO.builder().id(user.getId())
+        return UserDTO.builder()
+                .id(user.getId())
                 .name(user.getName())
-                .usersInfo(user.getUserInfo())
+                .userInfo(user.getUserInfo())
                 .build();
     }
 
     private User convertDtoToUser(UserDTO userDTO){
-        return User.builder().id(userDTO.getId())
+        return User.builder()
+                .id(userDTO.getId())
                 .name(userDTO.getName())
-                .userInfo(userDTO.getUsersInfo())
+                .userInfo(userDTO.getUserInfo())
                 .build();
     }
 }

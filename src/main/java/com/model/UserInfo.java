@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsersInfo {
+public class UserInfo {
 
     @Id
     @NotNull

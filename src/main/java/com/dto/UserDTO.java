@@ -1,6 +1,6 @@
 package com.dto;
 
-import com.model.UsersInfo;
+import com.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +19,5 @@ public class UserDTO {
     @NotNull
     private String name;
 
-    private UsersInfo usersInfo;
+    private UserInfo userInfo;
 }

@@ -1,20 +1,19 @@
 package com.services;
 
 import com.dto.SectorDTO;
-import com.model.Sector;
 import javassist.NotFoundException;
 
 import java.util.List;
 
 public interface SectorService {
 
-    List<Sector> getAllSectors();
+    List<SectorDTO> getAllSectors();
 
-    Sector findById(Long id) throws NotFoundException;
+    SectorDTO findById(Long id) throws NotFoundException;
 
-    Sector save(SectorDTO newSector);
+    void save(SectorDTO newSector);
 
-    Sector update(Long id, SectorDTO updatedSector) throws NotFoundException;
+    void update(Long id, SectorDTO updatedSector) throws NotFoundException;
 
     void delete(Long id) throws NotFoundException;
 

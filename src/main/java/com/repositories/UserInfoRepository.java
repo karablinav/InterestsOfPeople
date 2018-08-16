@@ -1,8 +1,8 @@
 package com.repositories;
 
-import com.model.UsersInfo;
+import com.model.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserInfoRepository extends JpaRepository<UsersInfo, Long> {
-    UsersInfo findByUserId( Long userId);
+public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
+    UserInfo findByUserId(Long userId);
 }

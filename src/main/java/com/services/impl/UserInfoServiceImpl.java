@@ -2,7 +2,7 @@ package com.services.impl;
 
 import com.dto.UserInfoDTO;
 import com.model.User;
-import com.model.UsersInfo;
+import com.model.UserInfo;
 import com.repositories.UserInfoRepository;
 import com.repositories.UserRepository;
 import com.services.UserInfoService;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class UserInfoServiceImpl implements UserInfoService{
 
     private final static String NOT_FOUND_ID = "UserInfo with id = %d not found";
@@ -30,41 +30,68 @@ public class UserInfoServiceImpl implements UserInfoService{
         this.userRepository = userRepository;
     }
 
-    public List<UsersInfo> getAllUsers() {
-        return userInfoRepository.findAll();
+    @Transactional
+    @Override
+    public List<UserInfoDTO> getAllUsers() {
+        return userInfoRepository.findAll().stream()
+                .map(this::convertUserToDto).collect(Collectors.toList());
     }
 
-    public UsersInfo findById(Long id) throws NotFoundException {
-        Optional<UsersInfo> user = userInfoRepository.findById(id);
-        return user.orElseThrow(()-> new NotFoundException(String.format(NOT_FOUND_ID, id)));
+    @Transactional
+    @Override
+    public UserInfoDTO findById(Long id) throws NotFoundException {
+        return userInfoRepository.findById(id)
+                .map(this::convertUserToDto)
+                .orElseThrow(()-> new NotFoundException(String.format(NOT_FOUND_ID, id)));
     }
 
-    public UsersInfo save(UserInfoDTO newUserInfo){
-       Optional<UsersInfo> usersInfo = Optional.ofNullable(userInfoRepository.findByUserId(newUserInfo.getUser().getId()));
+    @Transactional
+    @Override
+    public void save(UserInfoDTO newUserInfo){
+       Optional<UserInfo> usersInfo = Optional.ofNullable(userInfoRepository.findByUserId(newUserInfo.getUser().getId()));
         if (usersInfo.isPresent()) {
             userRepository.save(newUserInfo.getUser());
-            UsersInfo infoUser = usersInfo.get();
+            UserInfo infoUser = usersInfo.get();
             infoUser.setCheckbox(newUserInfo.isCheckbox());
             infoUser.setUser(newUserInfo.getUser());
             infoUser.setSectors(newUserInfo.getSectors());
             infoUser.setCheckbox(newUserInfo.isCheckbox());
-            return userInfoRepository.save(usersInfo.get());
+            userInfoRepository.save(usersInfo.get());
         } else {
             User newUser = User.builder().name(newUserInfo.getUser().getName()).build();
-            UsersInfo info = UsersInfo.builder()
+            UserInfo info = UserInfo.builder()
                     .sectors(newUserInfo.getSectors())
                     .user(newUser)
                     .checkbox(newUserInfo.isCheckbox()).build();
             newUser.setUserInfo(info);
             userRepository.save(newUser);
-            return userInfoRepository.save(info);
+             userInfoRepository.save(info);
         }
     }
+
+    @Transactional
+    @Override
     public void delete(Long id) throws NotFoundException {
-        Optional<UsersInfo> usersInfo = userInfoRepository.findById(id);
-        if (usersInfo.isPresent()) {
-            userInfoRepository.delete(usersInfo.get());
-        } else
-            throw new NotFoundException(String.format(NOT_FOUND_ID, id));
+       UserInfo userInfo = userInfoRepository.findById(id)
+               .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_ID,id)));
+       userInfoRepository.delete(userInfo);
+    }
+
+    private UserInfoDTO convertUserToDto(UserInfo userInfo){
+        return UserInfoDTO.builder()
+                .id(userInfo.getId())
+                .user(userInfo.getUser())
+                .sectors(userInfo.getSectors())
+                .checkbox(userInfo.isCheckbox())
+                .build();
+    }
+
+    private UserInfo convertDtoToUser(UserInfoDTO userInfoDTO){
+        return UserInfo.builder()
+                .id(userInfoDTO.getId())
+                .user(userInfoDTO.getUser())
+                .sectors(userInfoDTO.getSectors())
+                .checkbox(userInfoDTO.isCheckbox())
+                .build();
     }
 }

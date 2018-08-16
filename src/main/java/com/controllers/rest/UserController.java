@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestController
 public class UserController {
 
@@ -26,19 +28,20 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return !users.isEmpty()
-                ? ResponseEntity.status(HttpStatus.OK).body(users)
-                : ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
+                ? ResponseEntity.status(OK).body(users)
+                : ResponseEntity.status(NO_CONTENT).body(users);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long id) throws NotFoundException {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long id)
+            throws NotFoundException {
         return ResponseEntity.ok(userService.findById(id));
     }
 
     @PostMapping("/users")
     public ResponseEntity saveUser(@Valid @RequestBody UserDTO newUsers) {
         userService.save(newUsers);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(CREATED).build();
     }
 
     @PutMapping("/users/{id}")
@@ -52,7 +55,7 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserDTO> deleteUser(@PathVariable(value = "id") Long id) throws NotFoundException {
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(OK).build();
     }
 
 
