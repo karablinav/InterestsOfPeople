@@ -14,7 +14,6 @@ CREATE SEQUENCE users_info_id_seq
   NO MAXVALUE
   START WITH 10;
 
-
 CREATE TABLE users
 (
   id   INTEGER DEFAULT nextval('users_id_seq') NOT NULL,

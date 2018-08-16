@@ -28,8 +28,10 @@ public class UserInfo {
             initialValue = 10,
             allocationSize = 1
     )
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "checkbox")
     private boolean checkbox;
 
     @OneToOne(cascade = CascadeType.ALL)

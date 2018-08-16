@@ -22,11 +22,15 @@ public class User {
             initialValue = 10,
             allocationSize = 1
     )
+
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonBackReference
     private UserInfo userInfo;
 }
